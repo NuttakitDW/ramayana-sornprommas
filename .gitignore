@@ -7,3 +7,12 @@ game/export/
 game/test_output/
 
 .DS_Store
+
+# Unreal (build products and caches)
+unreal/*/Binaries/
+unreal/*/Intermediate/
+unreal/*/Saved/
+unreal/*/DerivedDataCache/
+unreal/*/.vscode/
+unreal/*/*.xcworkspace/
+unreal/*/*.code-workspace
