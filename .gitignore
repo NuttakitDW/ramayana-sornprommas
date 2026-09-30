@@ -16,3 +16,8 @@ unreal/*/DerivedDataCache/
 unreal/*/.vscode/
 unreal/*/*.xcworkspace/
 unreal/*/*.code-workspace
+
+# Blender build outputs
+blender/build/
+__pycache__/
+blender/scans/

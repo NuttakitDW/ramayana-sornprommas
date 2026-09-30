@@ -46,6 +46,8 @@ public:
 
 	bool bAutobot = false;
 	bool bQuick = false;
+	/** Dev: camera faces Hanuman's mask (-portrait) for checking head assets. */
+	bool bPortrait = false;
 	FString StartBeat = TEXT("intro");
 
 private:

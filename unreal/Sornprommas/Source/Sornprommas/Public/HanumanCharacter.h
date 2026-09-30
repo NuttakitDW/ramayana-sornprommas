@@ -64,6 +64,7 @@ public:
 	FName State = TEXT("normal");
 	bool bInputEnabled = true;
 	bool bAutobot = false;
+	bool bPortrait = false;
 	int32 ComboCount = 0;
 	int32 MaxCombo = 0;
 	int32 HitsTaken = 0;

@@ -32,6 +32,7 @@ void ASornGameMode::StartPlay()
 	const TCHAR* Cmd = FCommandLine::Get();
 	bAutobot = FParse::Param(Cmd, TEXT("autobot"));
 	bQuick = FParse::Param(Cmd, TEXT("quick"));
+	bPortrait = FParse::Param(Cmd, TEXT("portrait"));
 	FParse::Value(Cmd, TEXT("start="), StartBeat);
 	FString Shots;
 	if (FParse::Value(Cmd, TEXT("shots="), Shots, false))

@@ -97,6 +97,7 @@ void AHanumanCharacter::BeginPlay()
 	if (const ASornGameMode* GM = ASornGameMode::Get(this))
 	{
 		bAutobot = GM->bAutobot;
+		bPortrait = GM->bPortrait;
 	}
 	FKhonSpec Spec;
 	Spec.Kind = EKhonKind::Ling;
@@ -107,6 +108,7 @@ void AHanumanCharacter::BeginPlay()
 	Spec.Weapon = EKhonWeapon::Trident;
 	Spec.Mouth = EKhonMouth::Open;
 	Spec.bTail = true;
+	Spec.Mask = FSoftObjectPath(TEXT("/Game/Scans/Hanuman/SM_HanumanMask/StaticMeshes/SM_HanumanMask.SM_HanumanMask"));
 	Figure->Build(Spec);
 	FacingYaw = GetActorRotation().Yaw;
 	LookPoint = GetActorLocation();
@@ -727,6 +729,14 @@ void AHanumanCharacter::SetPuppet(bool bOn)
 
 void AHanumanCharacter::TickCamera(float DeltaSeconds)
 {
+	if (bPortrait)
+	{
+		// Three-quarter close-up of the mask, fixed to the figure's own forward axis.
+		const FVector HeadPos = Figure->GetComponentLocation() + FVector(0, 0, 187.f);
+		const FVector Eye = HeadPos + Figure->GetForwardVector() * 230.f + Figure->GetRightVector() * 110.f;
+		Camera->SetWorldLocationAndRotation(Eye, (HeadPos - Eye).Rotation());
+		return;
+	}
 	const float RealDt = GetWorld()->DeltaRealTimeSeconds;
 	FVector Look = GetActorLocation() + FVector(0, 0, 50.f);
 	float WantLen = 700.f;

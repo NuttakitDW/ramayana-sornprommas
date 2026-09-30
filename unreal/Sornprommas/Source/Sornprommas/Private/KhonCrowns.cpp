@@ -1,5 +1,7 @@
 #include "KhonCrowns.h"
 
+#include "Components/StaticMeshComponent.h"
+#include "Engine/StaticMesh.h"
 #include "KhonParts.h"
 #include "SornTypes.h"
 
@@ -7,6 +9,34 @@ using namespace KhonParts;
 
 namespace
 {
+	/** Neck opening of a scanned mask sits where the primitive head sphere ends. */
+	constexpr float MaskNeckY = -0.15f;
+	/** glTF scans import facing +Y; figures face +X. */
+	constexpr float MaskYaw = -90.f;
+
+	bool ScannedMask(AActor* O, USceneComponent* Head, const FKhonSpec& Spec)
+	{
+		UStaticMesh* Mesh = Spec.Mask.IsNull() ? nullptr : Cast<UStaticMesh>(Spec.Mask.TryLoad());
+		if (!Mesh)
+		{
+			if (!Spec.Mask.IsNull())
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Mask %s missing; using primitive head"), *Spec.Mask.ToString());
+			}
+			return false;
+		}
+		UStaticMeshComponent* C = NewObject<UStaticMeshComponent>(O);
+		C->SetStaticMesh(Mesh);
+		C->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		C->SetGenerateOverlapEvents(false);
+		C->SetCanEverAffectNavigation(false);
+		C->SetupAttachment(Head);
+		C->SetRelativeLocation(Sorn::G(0.f, MaskNeckY, 0.f));
+		C->SetRelativeRotation(FRotator(0.f, MaskYaw, 0.f));
+		C->RegisterComponent();
+		return true;
+	}
+
 	void Face(AActor* O, USceneComponent* Head, const FKhonSpec& Spec, float R)
 	{
 		UKhonMaterialSubsystem* L = Lib(O);
@@ -116,6 +146,10 @@ namespace KhonCrowns
 {
 	void BuildHead(AActor* Owner, USceneComponent* Head, const FKhonSpec& Spec)
 	{
+		if (ScannedMask(Owner, Head, Spec))
+		{
+			return;
+		}
 		const float R = Spec.Kind == EKhonKind::Phra ? 0.165f : 0.19f;
 		UMaterialInterface* SkinM = Lib(Owner)->Mat(Spec.Skin, 0.f, 0.45f);
 		Part(Owner, Head, EKhonShape::Sphere, SkinM, FVector(0, 0.04f, 0), FVector(2.f * R, 2.1f * R, 1.96f * R));

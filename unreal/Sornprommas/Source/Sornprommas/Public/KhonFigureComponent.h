@@ -34,6 +34,8 @@ struct FKhonSpec
 	EKhonWeapon Weapon = EKhonWeapon::None;
 	EKhonMouth Mouth = EKhonMouth::Calm;
 	bool bTail = false;
+	/** Scanned mask asset; replaces the primitive head and crown when it loads. */
+	FSoftObjectPath Mask;
 };
 
 /**
